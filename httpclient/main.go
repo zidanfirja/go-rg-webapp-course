@@ -19,6 +19,17 @@ type Joke struct {
 	Setup    string `json:"setup"`
 	Delivery string `json:"delivery"`
 	Error    bool   `json:"error"`
+	Flags    Flags  `json:"flags"`
+	Safe     bool   `json:"safe"`
+}
+
+type Flags struct {
+	Nsfw      bool `json:"nsfw"`
+	Religious bool `json:"religious"`
+	Political bool `json:"political"`
+	Racist    bool `json:"racist"`
+	Sexist    bool `json:"sexist"`
+	Explicit  bool `json:"explicit"`
 }
 
 type Anime struct {
@@ -76,21 +87,12 @@ func main() {
 		return
 	}
 
-	// print the joke
-	fmt.Println("Category :", joke.Category)
-	fmt.Println("Type :", joke.Type)
-	fmt.Println("Setup :", joke.Setup)
-	fmt.Println("Delivery :", joke.Delivery)
-
 	// get an anime quote from the anime API
 	anime, err := GetAnime()
 	if err != nil {
 		fmt.Println("Error while getting an anime quote from the anime API :", err)
 		return
 	}
-
-	// print the anime quote
-	fmt.Printf("%s said \"%s\" in %s \n", anime.Character, anime.Quote, anime.Anime)
 
 	/*
 			- Format of the output: <anime> said "<setup>", <delivery>
@@ -100,5 +102,40 @@ func main() {
 				Example output:
 				Fuyou Kaede said joke "I'm not saying my son is ugly...", "But on Halloween he went to tell the neighbors to turn down their TV and they gave him some candy."
 	*/
+
+	if !joke.Safe {
+		// check flags true
+
+		flags := []string{}
+		if joke.Flags.Nsfw {
+			flags = append(flags, "nsfw")
+		}
+		if joke.Flags.Religious {
+			flags = append(flags, "religious")
+		}
+		if joke.Flags.Political {
+			flags = append(flags, "political")
+		}
+		if joke.Flags.Racist {
+			flags = append(flags, "racist")
+		}
+		if joke.Flags.Sexist {
+			flags = append(flags, "sexist")
+		}
+
+		strFlags := ""
+		for i, flag := range flags {
+			if i == 0 {
+				strFlags += flag
+			} else {
+				strFlags += ", " + flag
+			}
+		}
+
+		fmt.Printf("This joke is not safe for work, because it contains %v \n", strFlags)
+		fmt.Printf("setup: %v, delivery: %v \n", joke.Setup, joke.Delivery)
+	} else {
+		fmt.Printf("%v said joke \"%v\", \"%v\" \n", anime.Character, joke.Setup, joke.Delivery)
+	}
 
 }
