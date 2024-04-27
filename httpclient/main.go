@@ -92,4 +92,13 @@ func main() {
 	// print the anime quote
 	fmt.Printf("%s said \"%s\" in %s \n", anime.Character, anime.Quote, anime.Anime)
 
+	/*
+			- Format of the output: <anime> said "<setup>", <delivery>
+			- add flags and safe in joke struct
+		    - check if joke is safe, then print the joke, check if joke is not safe, then print "This joke is not safe for work, because it contains <flags yang true>"
+
+				Example output:
+				Fuyou Kaede said joke "I'm not saying my son is ugly...", "But on Halloween he went to tell the neighbors to turn down their TV and they gave him some candy."
+	*/
+
 }
